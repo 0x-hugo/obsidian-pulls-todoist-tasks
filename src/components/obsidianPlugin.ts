@@ -1,10 +1,10 @@
 import { Notice, Plugin } from "obsidian";
 import { ObsidianPLuginSettingsTab } from "./obsidianPluginSettings";
 import { main } from "../program";
-import { DEFAULT_SETTINGS, AppSettings } from "../appSettings";
+import { DEFAULT_SETTINGS, ObsidianAppSettings } from "./obsidianPluginSettings";
 
 export default class ObsidianPullsTodoistPlugin extends Plugin {
-    settings: AppSettings;
+    settings: ObsidianAppSettings;
 
     async onload() {
         this.settings = await this.loadSettings();
@@ -24,7 +24,7 @@ export default class ObsidianPullsTodoistPlugin extends Plugin {
     }
 
     async loadSettings() {
-        let storedSettings: AppSettings = (await this.loadData()) ?? DEFAULT_SETTINGS;
+        let storedSettings: ObsidianAppSettings = (await this.loadData()) ?? DEFAULT_SETTINGS;
         console.log("loading settings from vault: ", storedSettings)
         return storedSettings;
     }

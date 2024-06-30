@@ -1,12 +1,12 @@
-import { App, Notice } from "obsidian";
-import { AppSettings, CoreFunctions, FileOperations, DateGroupedTasks } from "./types";
 import { TodoistTask } from "export-todoist-api";
+import { App, Notice } from "obsidian";
+import { AppSettings, CoreFunctions, DateGroupedTasks, FileOperations } from "./types";
 
 export const downloadTasksFromFileParams = (coreFuncs: CoreFunctions, fileOps: FileOperations) =>
   async (filePath: string, settings: AppSettings, app: App): Promise<void> => {
     const downloadTasks = downloadTasksInFolders(coreFuncs, fileOps);
     const fileContent = await fileOps.readFile(filePath);
-    const fileParams = coreFuncs.findTimeFramesInTag(fileContent);
+    const fileParams = coreFuncs.findTimeFramesInFile(fileContent);
     const tasks = await coreFuncs.fetchCompletedTasks(settings.authToken, fileParams);
     const groupedTasks = coreFuncs.groupTasksByDate(tasks);
     const filteredGroupedTasks: DateGroupedTasks = coreFuncs.filterInvalidTasks(groupedTasks);

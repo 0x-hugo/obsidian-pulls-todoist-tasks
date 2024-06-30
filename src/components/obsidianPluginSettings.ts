@@ -1,5 +1,31 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, PluginSettingTab, Setting, Notice } from "obsidian";
 import ObsidianPullsTodoistPlugin from "./obsidianPlugin";
+
+export interface ObsidianAppSettings {
+    settingsVersion: number;
+    keywordSegmentStart: string;
+    keywordSegmentEnd: string;
+    authToken: string;
+}
+
+export const DEFAULT_SETTINGS: ObsidianAppSettings = {
+    settingsVersion: 4,
+    keywordSegmentStart: "%% COMPLETED_TODOIST_TASKS_START %%",
+    keywordSegmentEnd: "%% COMPLETED_TODOIST_TASKS_END %%",
+    authToken: "",
+};
+
+export const isSettingsMissing = (settings: ObsidianAppSettings): boolean => {
+    if (settings.keywordSegmentStart === "" || settings.keywordSegmentEnd === "") {
+        new Notice("No keyword segment set. Please set one in the settings.", 10000);
+        return true;
+    }
+    if (settings.authToken === "") {
+        new Notice("No auth token set. Please set one in the settings.", 10000);
+        return true;
+    }
+    return false;
+};
 
 export class ObsidianPLuginSettingsTab extends PluginSettingTab {
     plugin: ObsidianPullsTodoistPlugin;

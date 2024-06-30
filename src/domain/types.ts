@@ -6,6 +6,7 @@ export type AppSettings = {
   keywordSegmentEnd: string;
 };
 
+
 export type TimeFrame = {
   start: Date;
   end: Date;
@@ -23,10 +24,9 @@ export type FileOperations = {
 };
 
 export type CoreFunctions = {
-  findTimeFramesInTag: (fileContent: string) => TimeFrame;
+  findTimeFramesInFile: (fileContent: string) => TimeFrame;
   fetchCompletedTasks: (authToken: string, timeFrame: TimeFrame) => Promise<TodoistTask[]>;
   groupTasksByDate: (tasks: TodoistTask[]) => DateGroupedTasks;
   filterInvalidTasks: (groupedTasks: DateGroupedTasks) => DateGroupedTasks;
-  renderMarkdown: (task: TodoistTask) => string;
   upsertTasks: (tasks: TodoistTask[], folder: string) => Promise<void>;
 };

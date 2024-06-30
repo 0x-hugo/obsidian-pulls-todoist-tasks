@@ -1,4 +1,4 @@
-import { App, Notice, TAbstractFile, TFile } from "obsidian";
+import { App, Notice, TFile } from "obsidian";
 import { FileOperations } from "./types";
 
 const createNotice = (message: string) => new Notice(message);

@@ -1,12 +1,10 @@
-import { renderMarkdown } from '../../src/constants/formatTasks';
+import { buildMarkdown } from '../../src/domain/markdownBuilder';
 import { TodoistTask } from 'export-todoist-api';
 
-describe("formatTasks", () => {
-	describe("renderTasksAsText", () => {
-		it("render single task", () => {
-			const result = renderMarkdown(data.singleInput)
-			expect(result).toEqual(data.singleOutput);
-		})
+describe("markdown builder", () => {
+	it("render single task", () => {
+		const result = buildMarkdown(data.singleInput)
+		expect(result).toEqual(data.singleOutput);
 	})
 })
 

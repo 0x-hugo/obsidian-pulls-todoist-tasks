@@ -20,7 +20,7 @@ export const CONSTANTS_REGEX: any = {
     ),
 };
 
-function getTimeFromKeySegments(fileContent: string): any {
+function getFileParams(fileContent: string): any {
     const startString: string[] = fileContent.match(CONSTANTS_REGEX.regexStartCompiled);
     const endString: string[] = fileContent.match(CONSTANTS_REGEX.regexEndCompiled);
 
@@ -68,25 +68,7 @@ function getTimeFromKeySegments(fileContent: string): any {
     return result;
 }
 
-function isSettingsMissing(settings: any) {
-    if (
-        settings.keywordSegmentStart === "" ||
-        settings.keywordSegmentEnd === ""
-    ) {
-        new Notice(
-            "No keyword segment set. Please set one in the settings.",
-            10000
-        );
-        return true;
-    }
-    if (settings.authToken === "") {
-        new Notice("No auth token set. Please set one in the settings.", 10000);
-        return true;
-    }
-    return false;
-}
-
-function hasStartEndSegments(fileContent: string) {
+function hasFileParams(fileContent: string) {
     const startString = fileContent.match(CONSTANTS_REGEX.regexStartCompiled);
     const endString = fileContent.match(CONSTANTS_REGEX.regexEndCompiled);
 
@@ -103,7 +85,6 @@ function hasStartEndSegments(fileContent: string) {
 }
 
 export {
-    getTimeFromKeySegments,
-    isSettingsMissing,
-    hasStartEndSegments,
+    getFileParams,
+    hasFileParams,
 };

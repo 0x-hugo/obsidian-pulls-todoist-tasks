@@ -60,17 +60,6 @@ export const getTimeFromKeySegments = (fileContent: string): any => {
     };
 };
 
-export const isSettingsMissing = (settings: any): boolean => {
-    if (settings.keywordSegmentStart === "" || settings.keywordSegmentEnd === "") {
-        new Notice("No keyword segment set. Please set one in the settings.", 10000);
-        return true;
-    }
-    if (settings.authToken === "") {
-        new Notice("No auth token set. Please set one in the settings.", 10000);
-        return true;
-    }
-    return false;
-};
 
 export const hasStartEndSegments = (fileContent: string): boolean => {
     const startString = fileContent.match(CONSTANTS_REGEX.regexStartCompiled);

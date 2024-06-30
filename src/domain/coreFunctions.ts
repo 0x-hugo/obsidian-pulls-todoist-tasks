@@ -1,13 +1,13 @@
 import moment from "moment";
 
 //internal
-import { TimeFrames, TodoistTask, fetchCompletedTasks as fetchTodoistTasks } from "export-todoist-api";
-import { renderMarkdown as renderTaskMarkdown } from "../constants/formatTasks";
-import { getTimeFromKeySegments } from "../constants/utils";
-import { CoreFunctions, DateGroupedTasks, TimeFrame, FileOperations } from "./types";
+import { TodoistTask, fetchCompletedTasks as fetchTodoistTasks } from "export-todoist-api";
+import { getFileParams } from "./fileParams";
+import { buildMarkdown } from "./markdownBuilder";
+import { CoreFunctions, DateGroupedTasks, FileOperations, TimeFrame } from "./types";
 
 export const createCoreFunctions = (fileOps: FileOperations): CoreFunctions => ({
-  findTimeFramesInTag: (fileContent: string) => getTimeFromKeySegments(fileContent),
+  findTimeFramesInFile: (fileContent: string) => getFileParams(fileContent),
 
   fetchCompletedTasks: async (authToken: string, timeFrame: TimeFrame): Promise<TodoistTask[]> =>
     fetchTodoistTasks(authToken, null),
@@ -25,8 +25,6 @@ export const createCoreFunctions = (fileOps: FileOperations): CoreFunctions => (
         .sort(([a, _], [b, __]) => a.localeCompare(b))
     ),
 
-  renderMarkdown: renderTaskMarkdown,
-
   upsertTasks: async (
     tasks: TodoistTask[],
     folder: string
@@ -35,7 +33,7 @@ export const createCoreFunctions = (fileOps: FileOperations): CoreFunctions => (
     const createTaskFile = async (task: TodoistTask) => {
       const fileName = `${folder}/${task.taskId}-${encodeFilename(task.title)}.md`;
       await fileOps.deleteFile(fileName).catch(() => { });
-      const markdownContent = renderTaskMarkdown(task);
+      const markdownContent = buildMarkdown(task);
       await fileOps.writeFile(fileName, markdownContent);
     };
 

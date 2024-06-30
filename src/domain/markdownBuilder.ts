@@ -1,13 +1,6 @@
 import { TodoistTask } from "export-todoist-api/index";
 
-export type TimeFrames = {
-    timeStartFormattedDate: string;
-    timeStartFormattedTime: string;
-    timeEndFormattedDate: string;
-    timeEndFormattedTime: string;
-}
-
-export const renderMarkdown: (task: TodoistTask) => string =
+export const buildMarkdown: (task: TodoistTask) => string =
     (task: TodoistTask) => {
         const buildTags = (task: TodoistTask) => {
             const tags = ['todoist']
