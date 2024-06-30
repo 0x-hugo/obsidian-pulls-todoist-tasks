@@ -1,5 +1,5 @@
 import { App, PluginSettingTab, Setting, Notice } from "obsidian";
-import ObsidianPullsTodoistPlugin from "./obsidianPlugin";
+import ObsidianPullsTodoistPlugin from "./plugin";
 
 export interface ObsidianAppSettings {
     settingsVersion: number;

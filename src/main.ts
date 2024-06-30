@@ -1,8 +1,8 @@
 import { App, MarkdownView, Notice } from "obsidian";
-import { ObsidianAppSettings, isSettingsMissing } from "./components/obsidianPluginSettings";
-import { createDomainFunctions } from "./domain";
-import { createFileOperations } from "./domain/fileOperations";
-import { hasFileParams } from "./domain/fileParams";
+import { ObsidianAppSettings, isSettingsMissing } from "./infrastructure/obsidian/pluginSettings";
+import { createFileOperations } from "./infrastructure/obsidian/fileOperations";
+import { hasFileParams } from "./domain/timeframe/timeframeExtractor";
+import { createApplicationFunctions } from "./application";
 
 export const main = async (
     settings: ObsidianAppSettings,
@@ -10,9 +10,9 @@ export const main = async (
 ): Promise<void> => {
     try {
         const fileOps = createFileOperations(app);
-        const application = createDomainFunctions(fileOps);
+        const application = createApplicationFunctions(fileOps, settings, app);
         const { filePath } = performValidations(app, settings);
-        await application.downloadTasksFromFileParams(filePath, settings, app);
+        await application.downloadTasks(filePath);
         new Notice("Completed tasks loaded.");
     } catch (error) {
         console.error("Error updating tasks:", error);

@@ -1,7 +1,7 @@
 import { Notice, Plugin } from "obsidian";
-import { ObsidianPLuginSettingsTab } from "./obsidianPluginSettings";
-import { main } from "../program";
-import { DEFAULT_SETTINGS, ObsidianAppSettings } from "./obsidianPluginSettings";
+import { ObsidianPLuginSettingsTab } from "./pluginSettings";
+import { main } from "../../main";
+import { DEFAULT_SETTINGS, ObsidianAppSettings } from "./pluginSettings";
 
 export default class ObsidianPullsTodoistPlugin extends Plugin {
     settings: ObsidianAppSettings;
