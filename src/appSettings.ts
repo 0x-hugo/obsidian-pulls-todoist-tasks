@@ -3,10 +3,6 @@ export interface AppSettings {
     keywordSegmentStart: string;
     keywordSegmentEnd: string;
     authToken: string;
-    taskPrefix: string;
-    taskPostfix: string;
-    renderSubtasks: boolean;
-    renderProjectsHeaders: boolean;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -14,8 +10,4 @@ export const DEFAULT_SETTINGS: AppSettings = {
     keywordSegmentStart: "%% COMPLETED_TODOIST_TASKS_START %%",
     keywordSegmentEnd: "%% COMPLETED_TODOIST_TASKS_END %%",
     authToken: "",
-    taskPrefix: "*",
-    taskPostfix: "",
-    renderSubtasks: true,
-    renderProjectsHeaders: true,
 };
