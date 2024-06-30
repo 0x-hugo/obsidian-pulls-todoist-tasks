@@ -1,7 +1,7 @@
 import { Notice, Plugin } from "obsidian";
-import { ObsidianPLuginSettingsTab } from "./settingsTabs";
-import { findTagAndUpdate } from "./components/updateFileContent";
-import { DEFAULT_SETTINGS, AppSettings } from "./constants/appSettings";
+import { ObsidianPLuginSettingsTab } from "./obsidianPluginSettings";
+import { main } from "../program";
+import { DEFAULT_SETTINGS, AppSettings } from "../appSettings";
 
 export default class ObsidianPullsTodoistPlugin extends Plugin {
     settings: AppSettings;
@@ -16,12 +16,13 @@ export default class ObsidianPullsTodoistPlugin extends Plugin {
             name: "Fetch completed tasks using dates in segments",
             callback: async () => {
                 new Notice("Fetching completed tasks..");
-                await findTagAndUpdate(this.settings, this.app)
+                await main(this.settings, this.app)
             },
         });
 
         this.addSettingTab(new ObsidianPLuginSettingsTab(this.app, this));
     }
+
     async loadSettings() {
         let storedSettings: AppSettings = (await this.loadData()) ?? DEFAULT_SETTINGS;
         console.log("loading settings from vault: ", storedSettings)

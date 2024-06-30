@@ -20,31 +20,29 @@ export const renderMarkdown: (task: TodoistTask) => string =
             const renderTags = tags.join(', ')
             return renderTags
         }
-        const buildMetadata = (
-            task: TodoistTask
-        ) => {
+        const buildMetadata = (task: TodoistTask) => {
             const metaTag = `---`
             const completedStatus = task.completedAt ? 'done' : 'inprogress'
             return `${metaTag}` +
-                `\n` + `date: ${task.dueAt}` + 
-                `\n` + `todoist_is_completed: ${task.completedAt ? 'true' : 'false'}` + 
-                `\n` + `todoist_is_recurring: ${task.isRecurring ?? 'false'}` + 
-                `\n` + `todoist_created_at: ${task.createdAt}` + 
-                `\n` + `todoist_updated_at: ${task.updatedAt ?? 'null'}` + 
-                `\n` + `todoist_task_id: ${task.taskId}` + 
-                `\n` + `todoist_priority: ${task.priority ?? 'null'}` + 
-                `\n` + `todoist_project_id: ${task.projectId ?? 'null'}` + 
-                `\n` + `todoist_section_id: ${task.sectionId ?? 'null'}` + 
-                `\n` + `todoist_project_name: ${task.projectName ?? 'null'}` + 
-                `\n` + `todoist_section_name: ${task.sectionName ?? 'null'}` + 
-                `\n` + `todoist_completed_at: ${task.completedAt ?? 'null'}` + 
-                `\n` + `todoist_parent_id: ${task.parentId ?? 'null'}` + 
-                `\n` + `todoist_labels: ${task.labels ?? 'null'}` + 
-                `\n` + `todoist_status: ${completedStatus}` + 
-                `\n` + `tags: [${buildTags(task)}]` + 
-                `\n` + `${metaTag}`
+                `\n` + `date: ${task.dueAt}` +
+                `\n` + `todoist_is_completed: ${task.completedAt ? 'true' : 'false'}` +
+                `\n` + `todoist_is_recurring: ${task.isRecurring ?? 'false'}` +
+                `\n` + `todoist_created_at: ${task.createdAt}` +
+                `\n` + `todoist_updated_at: ${task.updatedAt ?? 'null'}` +
+                `\n` + `todoist_task_id: ${task.taskId}` +
+                `\n` + `todoist_priority: ${task.priority ?? 'null'}` +
+                `\n` + `todoist_project_id: ${task.projectId ?? 'null'}` +
+                `\n` + `todoist_section_id: ${task.sectionId ?? 'null'}` +
+                `\n` + `todoist_project_name: ${task.projectName ?? 'null'}` +
+                `\n` + `todoist_section_name: ${task.sectionName ?? 'null'}` +
+                `\n` + `todoist_completed_at: ${task.completedAt ?? 'null'}` +
+                `\n` + `todoist_parent_id: ${task.parentId ?? 'null'}` +
+                `\n` + `todoist_labels: ${task.labels ?? 'null'}` +
+                `\n` + `todoist_status: ${completedStatus}` +
+                `\n` + `tags: [${buildTags(task)}]` +
+                `\n` + `${metaTag}` +
+                `\n`
         }
-
         const buildSubTitle = (task: TodoistTask) => {
             return `\n## ${task.title}`
         }
@@ -54,14 +52,12 @@ export const renderMarkdown: (task: TodoistTask) => string =
             return `\n${descriptionHeader}` +
                 `\n${description}\n`
         }
-
         const buildSubtasks = (task: TodoistTask) => {
             const subtaskHeader = '### Subtasks'
             const subtasks = task.childTasks ? task.childTasks : ''
             return `\n${subtaskHeader}` +
                 `\n${subtasks}`
         }
-
         const buildHref = (task: TodoistTask) => {
             const replaceSpacesWithHyphen = (text: string) => text.replace(/ /g, '-')
             const hrefTitle = replaceSpacesWithHyphen(task.title)
@@ -75,13 +71,11 @@ export const renderMarkdown: (task: TodoistTask) => string =
 
         const newRender: string =
             buildMetadata(task) +
-            `\n` +
             `${buildSubTitle(task)}` +
             `${buildDescription(task)}` +
             `${buildSubtasks(task)}` +
             `${buildHref(task)}`
             ;
-
 
         return newRender;
 

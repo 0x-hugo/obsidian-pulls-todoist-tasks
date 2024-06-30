@@ -1,33 +1,28 @@
-import { TodoistTask, fetchCompletedTasks } from "export-todoist-api";
 import moment from "moment";
 import { App, MarkdownView, Notice } from "obsidian";
-import { AppSettings } from "../constants/appSettings";
-import { renderMarkdown } from "../constants/formatTasks";
-import { FETCH_STRATEGIES } from "../constants/shared";
-import {
-    getTimeFromKeySegments,
-    getTimeframesForLastNHours,
-    getTimeframesForUsersToday,
-    segmentsCheck,
-    settingsCheck,
-} from "./utils";
 
-export async function findTagAndUpdate(
+//internal dependencies
+import { AppSettings } from "./appSettings";
+import { getTimeFromKeySegments, hasStartEndSegments, isSettingsMissing } from "./constants/utils";
+import { TodoistTask, fetchCompletedTasks } from "export-todoist-api";
+import { renderMarkdown } from "./constants/formatTasks";
+
+export async function main(
     settings: AppSettings,
     app: App,
 ): Promise<void> {
     const editor = app.workspace.getActiveViewOfType(MarkdownView).editor;
     const fileContent = editor.getValue();
 
-    if (
-        !settingsCheck(settings) ||
-        !segmentsCheck(fileContent, settings, FETCH_STRATEGIES.fromFile)
-    ) { return; }
+    if (isSettingsMissing(settings) || !hasStartEndSegments(fileContent)) {
+        new Notice("no segment found in file. END and START tags are required.", 10000);
+        return;
+    }
 
-    let timeFrames: any = findTimeFramesInTag(fileContent);
-    let formattedTasks: TodoistTask[] = await fetchCompletedTasks(settings.authToken, timeFrames);
-    let groupedTasks: GroupedTasks = groupTasksByDate(formattedTasks);
-    const filteredGroupedTasks: GroupedTasks = filterInvalidTasks(groupedTasks);
+    const timeFrames: any = findTimeFramesInTag(fileContent);
+    const formattedTasks: TodoistTask[] = await fetchCompletedTasks(settings.authToken, timeFrames);
+    const groupedTasks: DateGroupedTasks = groupTasksByDate(formattedTasks);
+    const filteredGroupedTasks: DateGroupedTasks = filterInvalidTasks(groupedTasks);
 
     const currentPath = app.workspace.getActiveFile().parent.path;
     Object.entries(filteredGroupedTasks).forEach(([date, tasks]) => {
@@ -41,7 +36,6 @@ export async function findTagAndUpdate(
 
         upsertAllTasks(date, projectTasks, dailyTasks, currentPath)
     });
-
     new Notice("Completed tasks loaded.");
 }
 
@@ -88,47 +82,20 @@ function createFileTask(task: TodoistTask, folderPath: string, encodeFilename: (
     createFile(fileName, markdownContent);
 }
 
-const prefixName = (task: TodoistTask) => {
-    if (task.completedAt) {
-        return "✅"
-    }
-    return ""
-}
-
-const findTimeFramesInTag = (fileContent: string) => {
+const findTimeFramesInTag = (fileContent: string): any => {
     return getTimeFromKeySegments(fileContent);
 }
 
-const getTimeFrames = (fetchStrategy: string, time: number, fileContent: string) => {
-    let timeFrames: any = null;
-
-    if (fetchStrategy === FETCH_STRATEGIES.today) {
-        timeFrames = getTimeframesForUsersToday();
-    }
-    if (fetchStrategy === FETCH_STRATEGIES.lastNHours) {
-        timeFrames = getTimeframesForLastNHours(time);
-    }
-    if (fetchStrategy === FETCH_STRATEGIES.fromFile) {
-        timeFrames = findTimeFramesInTag(fileContent);
-    }
-
-    if (timeFrames === null) {
-        new Notice("Invalid time frame.", 10000);
-        return;
-    }
-    return timeFrames;
-}
-
-type GroupedTasks = {
+type DateGroupedTasks = {
     //yyyy-mm-dd -> ([taskid] -> task)
     [key: string]: TodoistTask[];
 }
-const groupTasksByDate = (tasks: TodoistTask[]): GroupedTasks => {
+const groupTasksByDate = (tasks: TodoistTask[]): DateGroupedTasks => {
     const map = new Map<string, TodoistTask[]>();
     const dateCriteria: (task: TodoistTask) => string = (task: TodoistTask) => {
         return task.dueAt ? task.dueAt
             : task.completedAt ? task.completedAt
-            : task.createdAt;
+                : task.createdAt;
     }
     tasks.forEach((task: TodoistTask) => {
         //utc
@@ -138,11 +105,11 @@ const groupTasksByDate = (tasks: TodoistTask[]): GroupedTasks => {
         }
         map.get(date).push(task);
     });
-    const groupedTasks: GroupedTasks = Object.fromEntries(map.entries());
+    const groupedTasks: DateGroupedTasks = Object.fromEntries(map.entries());
     return groupedTasks;
 }
 
-const filterInvalidTasks: (groupedTasks: GroupedTasks) => GroupedTasks = (groupedTasks: GroupedTasks) => Object.fromEntries(
+const filterInvalidTasks: (groupedTasks: DateGroupedTasks) => DateGroupedTasks = (groupedTasks: DateGroupedTasks) => Object.fromEntries(
     Object.entries(groupedTasks)
         .filter(([key, _]) => key !== 'Invalid date')
         .sort(([a, _], [b, __]) => a.localeCompare(b))
