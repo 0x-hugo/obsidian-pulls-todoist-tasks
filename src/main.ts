@@ -1,10 +1,10 @@
 import { Notice, Plugin } from "obsidian";
-import { TodoistCompletedTasksSettingTab } from "./components/settingsTabs";
+import { ObsidianPLuginSettingsTab } from "./settingsTabs";
 import { findTagAndUpdate } from "./components/updateFileContent";
-import { DEFAULT_SETTINGS, TodoistSettings } from "./constants/DefaultSettings";
+import { DEFAULT_SETTINGS, AppSettings } from "./constants/appSettings";
 
-export default class TodoistCompletedTasks extends Plugin {
-    settings: TodoistSettings;
+export default class ObsidianPullsTodoistPlugin extends Plugin {
+    settings: AppSettings;
 
     async onload() {
         this.settings = await this.loadSettings();
@@ -20,10 +20,10 @@ export default class TodoistCompletedTasks extends Plugin {
             },
         });
 
-        this.addSettingTab(new TodoistCompletedTasksSettingTab(this.app, this));
+        this.addSettingTab(new ObsidianPLuginSettingsTab(this.app, this));
     }
     async loadSettings() {
-        let storedSettings: TodoistSettings = (await this.loadData()) ?? DEFAULT_SETTINGS;
+        let storedSettings: AppSettings = (await this.loadData()) ?? DEFAULT_SETTINGS;
         console.log("loading settings from vault: ", storedSettings)
         return storedSettings;
     }
@@ -32,11 +32,4 @@ export default class TodoistCompletedTasks extends Plugin {
         console.log("saving settings to vault: ", this.settings)
         await this.saveData(this.settings);
     }
-
-    // async saveSettings(settings: TodoistSettings) {
-    //     await this.saveData(settings);
-    //     this.settings = settings;
-    //     console.log("settings in saveSettings: ", this.settings)
-    //     return this.settings;
-    // }
 }

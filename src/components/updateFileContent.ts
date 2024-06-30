@@ -1,7 +1,7 @@
 import { TodoistTask, fetchCompletedTasks } from "export-todoist-api";
 import moment from "moment";
 import { App, MarkdownView, Notice } from "obsidian";
-import { TodoistSettings } from "../constants/DefaultSettings";
+import { AppSettings } from "../constants/appSettings";
 import { renderMarkdown } from "../constants/formatTasks";
 import { FETCH_STRATEGIES } from "../constants/shared";
 import {
@@ -13,7 +13,7 @@ import {
 } from "./utils";
 
 export async function findTagAndUpdate(
-    settings: TodoistSettings,
+    settings: AppSettings,
     app: App,
 ): Promise<void> {
     const editor = app.workspace.getActiveViewOfType(MarkdownView).editor;

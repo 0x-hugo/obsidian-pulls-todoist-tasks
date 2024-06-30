@@ -1,4 +1,4 @@
-import { TodoistTask } from "./shared";
+import { TodoistTask } from "export-todoist-api/index";
 
 export type TimeFrames = {
     timeStartFormattedDate: string;
@@ -52,7 +52,7 @@ export const renderMarkdown: (task: TodoistTask) => string =
             const descriptionHeader = '### Description'
             const description = task.description ? task.description : ''
             return `\n${descriptionHeader}` +
-                `\n${description}`
+                `\n${description}\n`
         }
 
         const buildSubtasks = (task: TodoistTask) => {
