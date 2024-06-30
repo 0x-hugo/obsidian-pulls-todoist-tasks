@@ -1,13 +1,13 @@
 import moment from "moment";
 
 //internal
-import { TodoistTask, fetchCompletedTasks as fetchTodoistTasks } from "export-todoist-api";
+import { TodoistTask, fetchCompletedTasks as fetchTodoistTasks } from "src/infrastructure/todoist";
 import { buildMarkdown } from "../../infrastructure/obsidian/markdownBuilder";
-import { getFileParams } from "../timeframe/timeframeExtractor";
-import { DateGroupedTasks, DomainServices, FileOperations, TimeFrame } from "../types";
+import { extractTimeRangeFromFile } from "../timeframe/timeframeExtractor";
+import { DateGroupedTasks, TaskServices, FileOperations, TimeFrame } from "../types";
 
-export const createDomainServices = (fileOps: FileOperations): DomainServices => ({
-  findTimeFramesInFile: (fileContent: string) => getFileParams(fileContent),
+export const createTasksServices = (fileOps: FileOperations): TaskServices => ({
+  findTimeFramesInFile: (fileContent: string) => extractTimeRangeFromFile(fileContent),
 
   fetchCompletedTasks: async (authToken: string, timeFrame: TimeFrame): Promise<TodoistTask[]> =>
     fetchTodoistTasks(authToken, null),

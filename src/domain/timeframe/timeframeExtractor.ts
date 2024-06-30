@@ -20,7 +20,7 @@ export const CONSTANTS_REGEX: any = {
     ),
 };
 
-function getFileParams(fileContent: string): any {
+function extractTimeRangeFromFile(fileContent: string): any {
     const startString: string[] = fileContent.match(CONSTANTS_REGEX.regexStartCompiled);
     const endString: string[] = fileContent.match(CONSTANTS_REGEX.regexEndCompiled);
 
@@ -85,6 +85,6 @@ function hasFileParams(fileContent: string) {
 }
 
 export {
-    getFileParams,
+    extractTimeRangeFromFile,
     hasFileParams,
 };

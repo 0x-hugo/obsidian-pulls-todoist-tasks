@@ -1,4 +1,4 @@
-import { TodoistTask } from "export-todoist-api/index";
+import { TodoistTask } from "src/infrastructure/todoist/index";
 
 export const buildMarkdown: (task: TodoistTask) => string =
     (task: TodoistTask) => {

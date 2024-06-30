@@ -1,16 +1,16 @@
 import { App } from "obsidian";
-import { DomainServices, FileOperations } from "../domain/types";
-import { createDomainServices } from "../domain/task/taskService";
+import { TaskServices, FileOperations } from "../domain/types";
+import { createTasksServices } from "../domain/task/taskService";
 import { downloadTasksFromFileParams } from "./useCases/downloadCompletedTasks";
 import { ObsidianAppSettings } from "../infrastructure/obsidian/pluginSettings";
 import { convertToAppConfig } from "../domain/config/appConfig";
 
-export const createApplicationFunctions = (
+export const createAppServices = (
   fileOps: FileOperations,
   settings: ObsidianAppSettings,
   app: App
 ) => {
-  const domainServices: DomainServices = createDomainServices(fileOps);
+  const domainServices: TaskServices = createTasksServices(fileOps);
   const appConfig = convertToAppConfig(settings);
   const downloadTasks = (filePath: string) =>
     downloadTasksFromFileParams(domainServices, fileOps, appConfig, app)(filePath);

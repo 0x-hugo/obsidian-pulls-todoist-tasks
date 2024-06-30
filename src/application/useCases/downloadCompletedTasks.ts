@@ -1,20 +1,20 @@
-import { TodoistTask } from "export-todoist-api";
+import { TodoistTask } from "src/infrastructure/todoist";
 import { App, Notice } from "obsidian";
-import { AppSettings, DateGroupedTasks, FileOperations, DomainServices } from "../../domain/types";
+import { AppSettings, DateGroupedTasks, FileOperations, TaskServices } from "../../domain/types";
 
 export const downloadTasksFromFileParams = (
-  domainServices: DomainServices,
+  taskServices: TaskServices,
   fileOps: FileOperations,
   settings: AppSettings,
   app: App
 ) =>
   async (filePath: string): Promise<void> => {
-    const downloadTasks = downloadTasksInFolders(domainServices, fileOps);
+    const downloadTasks = saveTasksToFolders(taskServices, fileOps);
     const fileContent = await fileOps.readFile(filePath);
-    const fileParams = domainServices.findTimeFramesInFile(fileContent);
-    const tasks = await domainServices.fetchCompletedTasks(settings.authToken, fileParams);
-    const groupedTasks = domainServices.groupTasksByDate(tasks);
-    const filteredGroupedTasks: DateGroupedTasks = domainServices.filterInvalidTasks(groupedTasks);
+    const fileParams = taskServices.findTimeFramesInFile(fileContent);
+    const tasks = await taskServices.fetchCompletedTasks(settings.authToken, fileParams);
+    const groupedTasks = taskServices.groupTasksByDate(tasks);
+    const filteredGroupedTasks: DateGroupedTasks = taskServices.filterInvalidTasks(groupedTasks);
 
     const currentPath = app.workspace.getActiveFile()?.parent?.path ?? '';
 
@@ -23,14 +23,12 @@ export const downloadTasksFromFileParams = (
     new Notice("Completed tasks loaded.");
   };
 
-const downloadTasksInFolders = (domainServices: DomainServices, fileOps: FileOperations) =>
+const saveTasksToFolders = (taskServices: TaskServices, fileOps: FileOperations) =>
   async (groupedTasks: DateGroupedTasks, currentPath: string) =>
     Promise.all(
       Object.entries(groupedTasks).map(([date, tasks]: [string, TodoistTask[]]) =>
-        processTaskGroup(domainServices, fileOps)(currentPath, [date, tasks]))
+        processTaskGroup(taskServices, fileOps)(currentPath, [date, tasks]))
     );
-
-
 
 const partitionTasks = (tasks: TodoistTask[]): [TodoistTask[], TodoistTask[]] => {
   const isDailyTask = (task: TodoistTask) => !task.sectionId || task.sectionName?.includes('tasks');
@@ -40,7 +38,7 @@ const partitionTasks = (tasks: TodoistTask[]): [TodoistTask[], TodoistTask[]] =>
   ];
 };
 
-const processTaskGroup = (domainServices: DomainServices, fileOps: FileOperations) =>
+const processTaskGroup = (taskServices: TaskServices, fileOps: FileOperations) =>
   async (currentPath: string, [date, tasks]: [string, TodoistTask[]]) => {
     const [year, month, day] = date.split("-");
     const monthFolderPath = `${currentPath}/completed-tasks/${year}/${month}`;
@@ -51,8 +49,8 @@ const processTaskGroup = (domainServices: DomainServices, fileOps: FileOperation
     await Promise.all([
       fileOps.createFolder(monthFolderPath),
       fileOps.createFolder(dailyFolderPath),
-      domainServices.upsertTasks(projectTasks, monthFolderPath),
-      domainServices.upsertTasks(dailyTasks, dailyFolderPath)
+      taskServices.upsertTasks(projectTasks, monthFolderPath),
+      taskServices.upsertTasks(dailyTasks, dailyFolderPath)
     ]);
   };
 

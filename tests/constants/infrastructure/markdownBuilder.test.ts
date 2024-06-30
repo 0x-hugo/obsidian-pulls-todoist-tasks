@@ -1,5 +1,5 @@
 import { buildMarkdown } from '../../../src/infrastructure/obsidian/markdownBuilder';
-import { TodoistTask } from 'export-todoist-api';
+import { TodoistTask } from 'src/infrastructure/todoist';
 
 describe("markdown builder", () => {
 	it("render single task", () => {

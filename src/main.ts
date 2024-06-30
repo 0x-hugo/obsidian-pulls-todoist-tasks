@@ -2,7 +2,7 @@ import { App, MarkdownView, Notice } from "obsidian";
 import { ObsidianAppSettings, isSettingsMissing } from "./infrastructure/obsidian/pluginSettings";
 import { createFileOperations } from "./infrastructure/obsidian/fileOperations";
 import { hasFileParams } from "./domain/timeframe/timeframeExtractor";
-import { createApplicationFunctions } from "./application";
+import { createAppServices } from "./application";
 
 export const main = async (
     settings: ObsidianAppSettings,
@@ -10,7 +10,7 @@ export const main = async (
 ): Promise<void> => {
     try {
         const fileOps = createFileOperations(app);
-        const application = createApplicationFunctions(fileOps, settings, app);
+        const application = createAppServices(fileOps, settings, app);
         const { filePath } = performValidations(app, settings);
         await application.downloadTasks(filePath);
         new Notice("Completed tasks loaded.");

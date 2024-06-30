@@ -1,4 +1,4 @@
-import { TodoistTask } from "export-todoist-api";
+import { TodoistTask } from "src/infrastructure/todoist";
 
 export type AppSettings = {
   authToken: string;
@@ -22,7 +22,7 @@ export type FileOperations = {
   deleteFile: (filePath: string) => Promise<void>;
 };
 
-export type DomainServices = {
+export type TaskServices = {
   findTimeFramesInFile: (fileContent: string) => TimeFrame;
   fetchCompletedTasks: (authToken: string, timeFrame: TimeFrame) => Promise<TodoistTask[]>;
   groupTasksByDate: (tasks: TodoistTask[]) => DateGroupedTasks;

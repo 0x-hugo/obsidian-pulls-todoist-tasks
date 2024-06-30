@@ -1,5 +1,5 @@
 
-export interface TimeFrames {
+export interface TimeRange {
     timeStartFormattedDate: string;
     timeStartFormattedTime: string;
     timeEndFormattedDate: string;
@@ -27,22 +27,22 @@ export interface TodoistTask {
 }
 
 export interface TodoistAPI {
-    fetchCompletedTasks: (authToken: string, timeFrames: TimeFrames) => Promise<TodoistTask[]>;
+    fetchCompletedTasks: (authToken: string, timeFrames: TimeRange) => Promise<TodoistTask[]>;
 }
 
-export function fetchCompletedTasks(authToken: string, timeFrames: TimeFrames): Promise<TodoistTask[]> {
+export function fetchCompletedTasks(authToken: string, timeFrames: TimeRange): Promise<TodoistTask[]> {
     const api = new MockTodoistAPI();
     return api.fetchCompletedTasks(authToken, timeFrames);
 }
 
 class EmptyTodoistAPI implements TodoistAPI {
-    fetchCompletedTasks(authToken: string, timeFrames: TimeFrames): Promise<TodoistTask[]> {
+    fetchCompletedTasks(authToken: string, timeFrames: TimeRange): Promise<TodoistTask[]> {
         return Promise.resolve([]);
     }
 } 
 
 class MockTodoistAPI implements TodoistAPI {
-    fetchCompletedTasks(authToken: string, timeFrames: TimeFrames): Promise<TodoistTask[]> {
+    fetchCompletedTasks(authToken: string, timeFrames: TimeRange): Promise<TodoistTask[]> {
         const json: TodoistTask[] = JSON.parse(this.json);
         return Promise.resolve(json);
     }
