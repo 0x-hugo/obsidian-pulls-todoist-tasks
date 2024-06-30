@@ -1,5 +1,5 @@
 import { App, Notice, TFile } from "obsidian";
-import { FileOperations } from "../../domain/types";
+import { FileOperations } from "src/application/";
 
 const createNotice = (message: string) => new Notice(message);
 

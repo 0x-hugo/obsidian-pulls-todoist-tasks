@@ -1,8 +1,7 @@
 import { App, MarkdownView, Notice } from "obsidian";
 import { ObsidianAppSettings, isSettingsMissing } from "./infrastructure/obsidian/pluginSettings";
 import { createFileOperations } from "./infrastructure/obsidian/fileOperations";
-import { hasFileParams } from "./domain/timeframe/timeframeExtractor";
-import { createAppServices } from "./application";
+import { createAppServices, hasFileParams } from "./application";
 
 export const main = async (
     settings: ObsidianAppSettings,

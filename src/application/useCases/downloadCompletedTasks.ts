@@ -1,6 +1,6 @@
 import { TodoistTask } from "src/infrastructure/todoist";
 import { App, Notice } from "obsidian";
-import { AppSettings, DateGroupedTasks, FileOperations, TaskServices } from "../../domain/types";
+import { AppSettings, DateGroupedTasks, FileOperations, TaskServices } from "../index";
 
 export const downloadTasksFromFileParams = (
   taskServices: TaskServices,

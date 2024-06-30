@@ -9,7 +9,7 @@ export interface ObsidianAppSettings {
 }
 
 export const DEFAULT_SETTINGS: ObsidianAppSettings = {
-    settingsVersion: 4,
+    settingsVersion: -1,
     keywordSegmentStart: "%% COMPLETED_TODOIST_TASKS_START %%",
     keywordSegmentEnd: "%% COMPLETED_TODOIST_TASKS_END %%",
     authToken: "",

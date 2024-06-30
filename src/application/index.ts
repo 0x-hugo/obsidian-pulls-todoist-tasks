@@ -18,6 +18,17 @@ export const createAppServices = (
   return { downloadTasks };
 };
 
+// Re-export everything from domain
 export * from '../domain/types';
 export * from '../domain/task/taskService';
+export * from '../domain/config/appConfig';
+export * from '../domain/timeframe/timeframeExtractor';
+
+// Export application-specific items
 export * from './useCases/downloadCompletedTasks';
+// export type { createAppServices };
+
+// Re-export infrastructure items if needed
+export type { ObsidianAppSettings } from "../infrastructure/obsidian/pluginSettings";
+
+// Add any other exports from the application layer hertype 
