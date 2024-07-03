@@ -15,7 +15,7 @@ export default class ObsidianPullsTodoistPlugin extends Plugin {
             name: "Fetch completed tasks using dates in segments",
             callback: async () => {
                 new Notice("Fetching completed tasks..");
-                await main(this.settings, this.app)
+                await main(settings, this.app)
                 new Notice("Completed tasks fetched");
             },
         });

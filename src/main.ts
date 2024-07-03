@@ -8,6 +8,7 @@ export const main = async (
     app: App,
 ): Promise<void> => {
     try {
+        console.log("main settings: ", settings)
         const fileOps = createFileOperations(app);
         const application = createAppServices(fileOps, settings, app);
         const { filePath } = performValidations(app, settings);
