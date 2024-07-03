@@ -31,7 +31,6 @@ export default class ObsidianPullsTodoistPlugin extends Plugin {
     }
 
     async saveSettings(settings: any) {
-        console.log("about to save settings: ", settings)
         await this.saveData(settings);
     }
 

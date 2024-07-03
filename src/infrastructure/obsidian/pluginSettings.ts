@@ -116,7 +116,6 @@ const createApiKeySetting = (containerEl: HTMLElement, plugin: ObsidianPullsTodo
                 .setValue(plugin.settings?.authToken)
                 .onChange(async (value) => {
                     const newSettings = {...plugin.settings, authToken: value};
-                    console.log("adding api key: ", newSettings)
                     await plugin.saveSettings(newSettings);
                 })
         );
@@ -139,7 +138,6 @@ const createLineDetectorSetting = (
                 .setValue(plugin.settings?.[settingKey])
                 .onChange(async (value) => {
                     const newSettings = {...plugin.settings, [settingKey]: value};
-                    console.log("adding extra settings: ", newSettings)
                     await plugin.saveSettings(newSettings);
                 })
         );

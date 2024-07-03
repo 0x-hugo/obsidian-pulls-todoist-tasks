@@ -10,9 +10,7 @@ const createAppServices = (
   settings: ObsidianAppSettings,
   app: App
 ) => {
-  console.log("createAppServices: ", settings)
   const appConfig = convertToAppConfig(settings);
-  console.log("appConfig: ", appConfig)
   const domainServices: TaskServices = createTasksServices(fileOps);
   const downloadTasks = (filePath: string) =>
     downloadTasksFromFileParams(domainServices, fileOps, appConfig, app)(filePath);
