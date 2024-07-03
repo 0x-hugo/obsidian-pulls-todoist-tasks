@@ -1,26 +1,26 @@
-import { App, PluginSettingTab, Setting, Notice } from "obsidian";
+import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import ObsidianPullsTodoistPlugin from "./plugin";
 
 export interface ObsidianAppSettings {
-    settingsVersion: number;
+    settingsVersion: string;
     keywordSegmentStart: string;
     keywordSegmentEnd: string;
     authToken: string;
 }
 
 export const DEFAULT_SETTINGS: ObsidianAppSettings = {
-    settingsVersion: -1,
+    settingsVersion: "NOT_LOADED",
     keywordSegmentStart: "%% COMPLETED_TODOIST_TASKS_START %%",
     keywordSegmentEnd: "%% COMPLETED_TODOIST_TASKS_END %%",
-    authToken: "",
-};
+    authToken: "NOT_FOUND_IN_",
+}
 
 export const isSettingsMissing = (settings: ObsidianAppSettings): boolean => {
-    if (settings.keywordSegmentStart === "" || settings.keywordSegmentEnd === "") {
+    if (settings?.keywordSegmentStart === "" || settings?.keywordSegmentEnd === "") {
         new Notice("No keyword segment set. Please set one in the settings.", 10000);
         return true;
     }
-    if (settings.authToken === "") {
+    if (settings?.authToken === "") {
         new Notice("No auth token set. Please set one in the settings.", 10000);
         return true;
     }
@@ -113,10 +113,11 @@ const createApiKeySetting = (containerEl: HTMLElement, plugin: ObsidianPullsTodo
         .addText((text) =>
             text
                 .setPlaceholder("Your Todoist API token")
-                .setValue(plugin.settings.authToken)
+                .setValue(plugin.settings?.authToken)
                 .onChange(async (value) => {
-                    plugin.settings.authToken = value;
-                    await plugin.saveSettings();
+                    const newSettings = {...plugin.settings, authToken: value};
+                    console.log("adding api key: ", newSettings)
+                    await plugin.saveSettings(newSettings);
                 })
         );
 };
@@ -135,12 +136,11 @@ const createLineDetectorSetting = (
         .addText((text) =>
             text
                 .setPlaceholder(placeholder)
-                .setValue(plugin.settings[settingKey])
+                .setValue(plugin.settings?.[settingKey])
                 .onChange(async (value) => {
-                    plugin.settings[settingKey] = value;
-                    await plugin.saveSettings();
+                    const newSettings = {...plugin.settings, [settingKey]: value};
+                    console.log("adding extra settings: ", newSettings)
+                    await plugin.saveSettings(newSettings);
                 })
         );
 };
-
-

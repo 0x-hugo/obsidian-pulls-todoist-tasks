@@ -1,15 +1,14 @@
 import { Notice, Plugin } from "obsidian";
-import { ObsidianPLuginSettingsTab } from "./pluginSettings";
 import { main } from "../../main";
-import { DEFAULT_SETTINGS, ObsidianAppSettings } from "./pluginSettings";
+import { DEFAULT_SETTINGS, ObsidianAppSettings, ObsidianPLuginSettingsTab } from "./pluginSettings";
 
 export default class ObsidianPullsTodoistPlugin extends Plugin {
     settings: ObsidianAppSettings;
 
     async onload() {
-        this.settings = await this.loadSettings();
-        await this.saveSettings();
-        console.log("settings in on-load: ", this.settings)
+        const settings = await this.loadSettings();
+        console.log("ObsidianPullsTodoistPlugin loading: ", settings)
+        await this.saveSettings(settings);
 
         this.addCommand({
             id: "todoist-fetch-completed-tasks",
@@ -17,6 +16,7 @@ export default class ObsidianPullsTodoistPlugin extends Plugin {
             callback: async () => {
                 new Notice("Fetching completed tasks..");
                 await main(this.settings, this.app)
+                new Notice("Completed tasks fetched");
             },
         });
 
@@ -24,26 +24,28 @@ export default class ObsidianPullsTodoistPlugin extends Plugin {
     }
 
     async loadSettings() {
-        let storedSettings: ObsidianAppSettings = (await this.loadData()) ?? DEFAULT_SETTINGS;
-        console.log("loading settings from vault: ", storedSettings)
-        storedSettings.settingsVersion = this.getDateAsVersion();
-        return storedSettings;
+        let storedSettings = await this.loadData()
+        storedSettings.settingsVersion = await this.getVersionFromManifest(this);
+        const mergedSettings = {...DEFAULT_SETTINGS, ...storedSettings};
+        return mergedSettings;
     }
 
-    async saveSettings() {
-        console.log("saving settings to vault: ", this.settings)
-        await this.saveData(this.settings);
+    async saveSettings(settings: any) {
+        console.log("about to save settings: ", settings)
+        await this.saveData(settings);
     }
 
-    private getDateAsVersion() { //get as 20240427
-        const currentDate = new Date();
-        const ensureTwoDigits = (number: number) => number < 10 ? `0${number}` : number;
-        const year = currentDate.getFullYear();
-        const month = ensureTwoDigits(currentDate.getMonth() + 1);
-        const day = ensureTwoDigits(currentDate.getDate());
-        const hours = ensureTwoDigits(currentDate.getHours());
-        const minutes = ensureTwoDigits(currentDate.getMinutes());
-        const version = Number(`${year}${month}${day}${hours}${minutes}`);
-        return version;
-    }
+    private getVersionFromManifest = async (plugin: ObsidianPullsTodoistPlugin): Promise<string> => {
+        try {
+            const manifest: string = await plugin.app.vault.adapter.read(
+                `${plugin.manifest.dir}/manifest.json`
+            );
+            const manifestJson = JSON.parse(manifest);
+            return manifestJson.version;
+        } catch (error) {
+            console.error("Error reading manifest.json:", error);
+            throw error
+        }
+    };
+
 }

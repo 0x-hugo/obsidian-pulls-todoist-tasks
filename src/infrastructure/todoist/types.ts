@@ -1,3 +1,5 @@
+import { TodoistTaskV1 } from 'todoist-api';
+
 interface TimeRange {
     timeStartFormattedDate: string;
     timeStartFormattedTime: string;
@@ -6,23 +8,6 @@ interface TimeRange {
     limit: number;
 }
 
-interface TodoistTask {
-    taskId: string;
-    title: string;
-    completedAt: string | null;
-    childTasks: string[];
-    projectId?: string | null;
-    projectName?: string | null;
-    parentId?: string | null;
-    createdAt: string;
-    updatedAt: string | null;
-    dueAt: string | null;
-    isRecurring: boolean;
-    labels: string[];
-    description?: string | null;
-    priority: number | null;
-    sectionId: string | null;
-    sectionName: string | null;
-}
+export type TodoistTask = TodoistTaskV1
 
-export type { TimeRange, TodoistTask };
+export type { TimeRange } 
