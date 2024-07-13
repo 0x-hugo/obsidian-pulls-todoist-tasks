@@ -29,9 +29,9 @@ export const createTasksServices = (fileOps: FileOperations): TaskServices => ({
     tasks: TodoistTask[],
     folder: string
   ): Promise<void> => {
-    const encodeFilename = (str: string) => str.replace(/[\\/:*?""<>|]/g, '_');
+    const sanitizeFilename = (str: string) => str.replace(/[\\/:*?""<>|]/g, '_'); // (\ / : * ? " " < > |) -> _
     const createTaskFile = async (task: TodoistTask) => {
-      const fileName = `${folder}/${task.taskId}-${encodeFilename(task.title)}.md`;
+      const fileName = `${folder}/${task.taskId}-${sanitizeFilename(task.title)}.md`;
       await fileOps.deleteFile(fileName).catch(() => { });
       const markdownContent = buildMarkdown(task);
       await fileOps.writeFile(fileName, markdownContent);

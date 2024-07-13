@@ -1,7 +1,7 @@
 {
   "id": "obsidian-pulls-todoist-task",
   "name": "Obsidian Pulls Todoist Task",
-  "version": "1.0.1-202407032017",
+  "version": "1.0.1-202407130830",
   "minAppVersion": "0.15.0",
   "description": "Pull your Todoist tasks to Obsidian notes",
   "author": "Capitan empanada",

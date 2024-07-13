@@ -5,6 +5,16 @@ CHECK_JQ_DEPENDENCY() {
         exit 1
     fi
 }
+CHECK_NPM_DEPENDENCY() {
+    if ! command -v npm &>/dev/null; then
+        echo "trying nvm use v18.15.0"
+        nvm use v18.15.0
+        if ! command -v npm &>/dev/null; then
+            echo "npm is not installed. Please install it using 'nvm install v18.15.0'."
+            exit 1
+        fi
+    fi
+}
 GET_DATE_AS_VERSION() {
     local package_file="package.json"
     local version=$(jq -r '.version' "$package_file") # 1.0.0-202407011953
@@ -60,7 +70,8 @@ main() {
     local VAULT="tooling"
     local PLUGIN_NAME="obsidian-pulls-todoist-task"
     local VERSION=$(GET_DATE_AS_VERSION)
-    CHECK_JQ_DEPENDENCY \
+    CHECK_NPM_DEPENDENCY \
+    && CHECK_JQ_DEPENDENCY \
         && UPDATE_PACKAGE_JSON_VERSION "$VERSION" \
         && UPDATE_MANIFEST_JSON_VERSION "$VERSION" \
         && test_build_and_install_main "$VAULT" "$PLUGIN_NAME"

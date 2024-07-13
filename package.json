@@ -1,6 +1,6 @@
 {
   "name": "obsidian-pulls-todoist-task",
-  "version": "1.0.1-202407032017",
+  "version": "1.0.1-202407130830",
   "description": "This is a plugin for Obsidian, that integrates with todoist API",
   "main": "main.js",
   "scripts": {
